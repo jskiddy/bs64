@@ -195,8 +195,8 @@
     filter.onInput = function (value) {
         value = value.trim().toLowerCase();
         [].forEach.call(doc.querySelectorAll('.item'), function (item) {
-            item.hidden = item.querySelector('.item-name').textContent.indexOf(value) < 0 &&
-                          item.querySelector('.item-date').textContent.indexOf(value) < 0;
+            item.hidden = item.querySelector('.item-name').textContent.toLowerCase().indexOf(value) < 0 &&
+                          item.querySelector('.item-date').textContent.toLowerCase().indexOf(value) < 0;
         });
     };
 
