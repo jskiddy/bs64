@@ -1,0 +1,246 @@
+* {
+    font: inherit;
+    color: inherit;
+    border: 0;
+    margin: 0;
+    outline: 0;
+    padding: 0;
+    vertical-align: baseline;
+}
+
+::selection {
+    color: #fff;
+    text-shadow: none;
+    background-color: #7f8c8d;
+}
+
+::-moz-selection {
+    color: #fff;
+    text-shadow: none;
+    background-color: #7f8c8d;
+}
+
+ul {
+    list-style: none;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    font: 16px/1.5 "Open Sans", sans-serif;
+    color: #222;
+    text-rendering: optimizelegibility;
+    background-color: #e5e5e5;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.list {
+    top: 50px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+    position: absolute;
+}
+
+.list-placeholder {
+    color: #999;
+    display: none;
+    padding: 16px;
+    font-size: 22px;
+    text-align: center;
+}
+
+.empty .list-placeholder {
+    display: block;
+}
+
+.item {
+    color: #626468;
+    overflow: auto;
+    position: relative;
+    background: #fff;
+    box-shadow: 0 2px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+.item,
+.item-name,
+.item-date,
+.item-value,
+.item-image {
+    margin: 16px;
+}
+
+.item-name {
+    overflow: hidden;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 18px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding-right: 34px;
+}
+
+.item-link {
+    color: #3f51b5;
+}
+
+.item-date {
+    color: #888;
+    font-size: 14px;
+    line-height: 100%;
+}
+
+.item-value {
+    overflow: auto;
+    word-wrap: break-word;
+    max-height: 160px;
+    white-space: pre-wrap;
+}
+
+.item-image {
+    display: none;
+}
+
+.item-image[src] {
+    display: block;
+    max-width: 64px;
+    background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyIDIiPjxwYXRoIG9wYWNpdHk9Ii4xIiBkPSJNMCAwaDF2MUgwek0xIDFoMXYxSDF6Ii8+PC9zdmc+");
+    -webkit-background-size: 8px 8px;
+            background-size: 8px 8px;
+}
+
+.item-delete {
+    top: 0;
+    right: 0;
+    cursor: pointer;
+    opacity: 0.8;
+    padding: 16px;
+    display: block;
+    position: absolute;
+}
+
+.item-delete:hover,
+.item-delete:active {
+    opacity: 1;
+}
+
+.icon {
+    fill: currentColor;
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    display: block;
+    stroke-width: 2px;
+    pointer-events: none;
+}
+
+.panel {
+    color: #fff;
+    height: 50px;
+    padding: 0 16px;
+    overflow: hidden;
+    background: #3f51b5;
+    line-height: 50px;
+}
+
+.panel-item {
+    float: left;
+    height: 100%;
+    position: relative;
+}
+
+.panel-item_button {
+    display: -webkit-flex;
+    display:         flex;
+    cursor: pointer;
+    padding: 0 16px;
+    white-space: nowrap;
+    -webkit-align-items: center;
+            align-items: center;
+}
+
+.panel-item_button:hover,
+.panel-item_button:active {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.panel-item_button .icon {
+    margin-right: 10px;
+}
+
+.panel-item_filter {
+    color: #fff;
+    float: right;
+}
+
+.panel-input {
+    width: 260px;
+    padding: 0 50px 0 16px;
+    line-height: 50px;
+    background-color: rgba(0, 0, 0, 0.1);
+
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+}
+
+.panel-input::-moz-placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.panel-input::-webkit-input-placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.panel-clear {
+    top: 0;
+    right: 0;
+    cursor: pointer;
+    opacity: 0.8;
+    padding: 16px;
+    display: block;
+    position: absolute;
+}
+
+.panel-clear:hover,
+.panel-clear:active {
+    opacity: 1;
+}
+
+.empty .panel-item_filter,
+.panel-input.empty ~ .panel-clear,
+.empty [data-action="clearList"] {
+    display: none;
+}
+
+.selectable {
+    -webkit-user-select: text;
+       -moz-user-select: text;
+        -ms-user-select: text;
+            user-select: text;
+}
+
+.unselectable {
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+
+@media screen and (max-width: 480px) {
+    .panel-item_button .text {
+        display: none;
+    }
+
+    .panel-item_button .icon {
+        margin-right: 0;
+    }
+
+    .panel-input {
+        width: 160px;
+    }
+}
