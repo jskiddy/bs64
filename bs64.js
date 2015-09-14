@@ -207,6 +207,17 @@
     }
 
     if ('serviceWorker' in nav) {
-        // TODO
+        nav.serviceWorker
+            .register('/bs64/sw.js', {
+                scope: '/bs64/'
+            })
+            .then(
+                function (reg) {
+                    console.log('Registration succeeded. Scope is ' + reg.scope);
+                },
+                function (error) {
+                    console.log('Registration failed with ' + error);
+                }
+            );
     }
 })(this, this.document, this.navigator);
