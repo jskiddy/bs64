@@ -2,7 +2,8 @@ var FILES = [
         '/bs64/',
         '/bs64/bs64.js',
         '/bs64/bs64.css',
-        '/bs64/index.html'
+        '/bs64/index.html',
+        new Request('https://fonts.googleapis.com/css?family=Open+Sans&subset=latin,cyrillic', {mode: 'no-cors'})
     ],
     PREFIX = 'bs64',
     VERSION = 'ver1',
