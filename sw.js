@@ -6,8 +6,24 @@ var FILES = [
         new Request('https://fonts.googleapis.com/css?family=Open+Sans&subset=latin,cyrillic', {mode: 'no-cors'})
     ],
     PREFIX = 'bs64',
-    VERSION = 'ver1',
-    CACHENAME = PREFIX + VERSION;
+    VERSION = 'ver2',
+    CACHENAME = PREFIX + VERSION,
+    handleFontRequest = function (request) {
+        return caches
+            .match(request)
+            .catch(function () {
+                return fetch(request);
+            })
+            .then(function (response) {
+                caches
+                    .open(CACHENAME)
+                    .then(function (cache) {
+                        cache.put(request, response.clone());
+                    });
+
+                return response;
+            });
+    };
 
 Cache.prototype.addAll =
 Cache.prototype.addAll || function addAll(requests) {
@@ -37,22 +53,19 @@ Cache.prototype.addAll || function addAll(requests) {
 };
 
 this.addEventListener('fetch', function (event) {
-    event.respondWith(
-        caches
-            .match(event.request)
-            .catch(function () {
-                return fetch(event.request);
-            })
-            .then(function (response) {
-                caches
-                    .open(CACHENAME)
-                    .then(function (cache) {
-                        cache.put(event.request, response.clone());
-                    });
+    var requestURL = new URL(event.request.url);
 
-                return response;
-            })
-    );
+    if (requestURL.hostname === 'fonts.gstatic.com') {
+        event.respondWith(handleFontRequest(event.request));
+    } else {
+        event.respondWith(
+            caches
+                .match(event.request)
+                .catch(function () {
+                    return fetch(event.request);
+                })
+        );
+    }
 });
 
 this.addEventListener('install', function (event) {
