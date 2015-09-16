@@ -5,7 +5,7 @@ var FILES = [
         '/bs64/index.html'
     ],
     PREFIX = 'bs64',
-    VERSION = 'ver2',
+    VERSION = 'ver3',
     CACHENAME = PREFIX + VERSION;
 
 Cache.prototype.addAll =
