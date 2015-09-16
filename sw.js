@@ -2,28 +2,11 @@ var FILES = [
         '/bs64/',
         '/bs64/bs64.js',
         '/bs64/bs64.css',
-        '/bs64/index.html',
-        new Request('https://fonts.googleapis.com/css?family=Open+Sans&subset=latin,cyrillic', {mode: 'no-cors'})
+        '/bs64/index.html'
     ],
     PREFIX = 'bs64',
     VERSION = 'ver2',
-    CACHENAME = PREFIX + VERSION,
-    handleFontRequest = function (request) {
-        return caches
-            .match(request)
-            .catch(function () {
-                return fetch(request);
-            })
-            .then(function (response) {
-                caches
-                    .open(CACHENAME)
-                    .then(function (cache) {
-                        cache.put(request, response.clone());
-                    });
-
-                return response;
-            });
-    };
+    CACHENAME = PREFIX + VERSION;
 
 Cache.prototype.addAll =
 Cache.prototype.addAll || function addAll(requests) {
@@ -53,19 +36,13 @@ Cache.prototype.addAll || function addAll(requests) {
 };
 
 this.addEventListener('fetch', function (event) {
-    var requestURL = new URL(event.request.url);
-
-    if (requestURL.hostname === 'fonts.gstatic.com') {
-        event.respondWith(handleFontRequest(event.request));
-    } else {
-        event.respondWith(
-            caches
-                .match(event.request)
-                .catch(function () {
-                    return fetch(event.request);
-                })
-        );
-    }
+    event.respondWith(
+        caches
+            .match(event.request)
+            .catch(function () {
+                return fetch(event.request);
+            })
+    );
 });
 
 this.addEventListener('install', function (event) {
