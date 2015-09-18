@@ -120,7 +120,7 @@ body {
             background-size: 8px 8px;
 }
 
-.item-delete {
+.item-control {
     top: 0;
     right: 0;
     cursor: pointer;
@@ -130,8 +130,8 @@ body {
     position: absolute;
 }
 
-.item-delete:hover,
-.item-delete:active {
+.item-control:hover,
+.item-control:active {
     opacity: 1;
 }
 
