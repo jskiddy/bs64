@@ -36,7 +36,8 @@ body {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-.list {
+.list,
+.list-placeholder {
     top: 50px;
     left: 0;
     right: 0;
@@ -47,14 +48,20 @@ body {
 
 .list-placeholder {
     color: #999;
-    display: none;
+    display: -webkit-flex;
+    display:         flex;
     padding: 16px;
     font-size: 22px;
     text-align: center;
+    visibility: hidden;
+    -webkit-align-items: center;
+            align-items: center;
+    -webkit-justify-content: center;
+            justify-content: center;
 }
 
 .empty .list-placeholder {
-    display: block;
+    visibility: visible;
 }
 
 .item {

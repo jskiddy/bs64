@@ -88,6 +88,7 @@
 
         resultList.innerHTML = '';
         resultList.appendChild(listFragment);
+        resultList.scrollTop = 0;
     };
 
     var preventHandler = function (event) {
