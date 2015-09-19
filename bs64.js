@@ -232,7 +232,7 @@
 
             case 'copyValue':
                 if (util.copyNodeText(doc.querySelectorAll('.item-value')[target.dataset.index])) {
-                    toast.show('Value copied!');
+                    toast.show(doc.documentElement.dataset.messageCopied);
                 }
                 break;
 
@@ -295,7 +295,7 @@
                     reg.onupdatefound = function (event) {
                         this.installing.onstatechange = function (event) {
                             if (this.state === 'installed') {
-                                toast.show(active ? 'App updated. Reload, please.' : 'App ready for offline use.');
+                                toast.show(doc.documentElement.dataset[active ? 'messageUpdated' : 'messageReady']);
                             }
                         };
                     };
