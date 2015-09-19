@@ -1,6 +1,80 @@
 (function (win, doc, nav) {
     'use strict';
 
+    var util = {
+        selectNode: function (node) {
+            var range = doc.createRange(),
+                selection = win.getSelection();
+
+            selection.removeAllRanges();
+            range.selectNodeContents(node);
+            selection.addRange(range);
+            return selection;
+        },
+
+        preventEvent: function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        },
+
+        copyNodeText: function (node) {
+            var copied = false,
+                selection = this.selectNode(node);
+
+            try {
+                copied = doc.execCommand('copy');
+            } catch (error) {}
+            selection.removeAllRanges();
+
+            return copied;
+        },
+
+        isCopySupported: function () {
+            var data;
+
+            if (!doc.queryCommandSupported) {
+                return false;
+            }
+
+            data = nav.userAgent.toLowerCase().match(/(opr|chrome|firefox)\/(\d+)/);
+            if (data) {
+                data[2] = win.Number(data[2]);
+                switch (data[1]) {
+                    case 'opr':
+                        return data[2] >= 29;
+
+                    case 'chrome':
+                        return data[2] >= 43;
+
+                    case 'firefox':
+                        return data[2] >= 41;
+                }
+            }
+
+            return false;
+        }
+    };
+
+    // Toast
+
+    var Toast = function Toast(element) {
+        this.timer = 0;
+        this.element = element || doc.createElement('div');
+    };
+
+    Toast.prototype.hide = function () {
+        this.element.classList.add('hidden');
+        return this;
+    };
+
+    Toast.prototype.show = function (message) {
+        win.clearTimeout(this.timer);
+        this.element.textContent = message;
+        this.element.classList.remove('hidden');
+        this.timer = win.setTimeout(this.hide.bind(this), 2000);
+        return this;
+    };
+
     // Storage
 
     var Storage = function Storage(name) {
@@ -51,7 +125,8 @@
 
     // Initialization
 
-    var filter = new TextInput(doc.getElementById('filter')),
+    var toast = new Toast(doc.getElementById('toast')),
+        filter = new TextInput(doc.getElementById('filter')),
         storage = new Storage('bs64'),
         listItems = storage.getValue('items') || [],
         fileInput = doc.getElementById('fileInput'),
@@ -79,6 +154,7 @@
             itemLink.download = itemLink.textContent = item.name;
             listItem.querySelector('.item-date').textContent = item.date;
             listItem.querySelector('.item-value').textContent = itemLink.href = item.value;
+            listItem.querySelector('[data-action="copyValue"]').dataset.index = index;
             listItem.querySelector('[data-action="deleteItem"]').dataset.index = index;
             if (item.imageFile) {
                 listItem.querySelector('.item-image').src = item.value;
@@ -91,17 +167,12 @@
         resultList.scrollTop = 0;
     };
 
-    var preventHandler = function (event) {
-        event.preventDefault();
-        event.stopPropagation();
-    };
-
     var uploadHandler = function (event) {
-        preventHandler(event);
-
         var count,
             files = event.dataTransfer ?
                     event.dataTransfer.files : event.target.files;
+
+        util.preventEvent(event);
 
         if (!files) {
             return;
@@ -134,8 +205,10 @@
     };
 
     doc.addEventListener('drop', uploadHandler, false);
-    doc.addEventListener('dragover', preventHandler, false);
-    doc.addEventListener('dragenter', preventHandler, false);
+    doc.addEventListener('dragover', util.preventEvent, false);
+    doc.addEventListener('dragenter', util.preventEvent, false);
+
+    doc.documentElement.classList.toggle('copying', util.isCopySupported());
 
     doc.addEventListener('click', function (event) {
         var target = event.target;
@@ -155,6 +228,12 @@
         switch (target.dataset.action) {
             case 'upload':
                 fileInput.click();
+                break;
+
+            case 'copyValue':
+                if (util.copyNodeText(doc.querySelectorAll('.item-value')[target.dataset.index])) {
+                    toast.show('Value copied!');
+                }
                 break;
 
             case 'clearList':
@@ -177,17 +256,14 @@
     }, false);
 
     doc.addEventListener('dblclick', function (event) {
-        var range, target = event.target;
+        var target = event.target;
 
         if (target.nodeType !== this.ELEMENT_NODE || !target.classList.contains('selectable')) {
             return;
         }
 
-        preventHandler(event);
-
-        range = this.createRange();
-        range.selectNodeContents(target);
-        win.getSelection().addRange(range);
+        util.selectNode(target);
+        util.preventEvent(event);
     }, false);
 
     filter.setValue('');
@@ -214,6 +290,16 @@
             })
             .then(
                 function (reg) {
+                    var active = reg.active;
+
+                    reg.onupdatefound = function (event) {
+                        this.installing.onstatechange = function (event) {
+                            if (this.state === 'installed') {
+                                toast.show(active ? 'App updated. Reload, please.' : 'App ready for offline use.');
+                            }
+                        };
+                    };
+
                     console.log('Registration succeeded. Scope is ' + reg.scope);
                 },
                 function (error) {
