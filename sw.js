@@ -1,12 +1,14 @@
 var FILES = [
         '/bs64/',
         '/bs64/bs64.js',
+        '/bs64/icon.png',
         '/bs64/bs64.css',
         '/bs64/index.html',
+        '/bs64/manifest.json',
         new Request('https://fonts.googleapis.com/css?family=Open+Sans&subset=latin,cyrillic', {mode: 'no-cors'})
     ],
     PREFIX = 'bs64',
-    VERSION = 'ver5',
+    VERSION = 'ver6',
     CACHENAME = PREFIX + VERSION,
     ALLOWED_HOSTS = [
         'fonts.gstatic.com'
