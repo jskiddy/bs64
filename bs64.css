@@ -82,12 +82,9 @@ body {
 }
 
 .item-name {
-    overflow: hidden;
     font-size: 14px;
     font-weight: bold;
     line-height: 18px;
-    white-space: nowrap;
-    text-overflow: ellipsis;
     padding-right: 34px;
 }
 
@@ -240,12 +237,9 @@ body {
     bottom: 0;
     z-index: 1;
     padding: 0 16px;
-    overflow: hidden;
     position: absolute;
     background: #e91e63;
     line-height: 50px;
-    white-space: nowrap;
-    text-overflow: ellipsis;
 
     -webkit-transition: visibility 0.2s, -webkit-transform 0.2s;
        -moz-transition: visibility 0.2s,    -moz-transform 0.2s;
@@ -258,6 +252,12 @@ body {
     -webkit-transform: translateY(100%) translateZ(0);
        -moz-transform: translateY(100%) translateZ(0);
             transform: translateY(100%) translateZ(0);
+}
+
+.truncated {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .selectable {

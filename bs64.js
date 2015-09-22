@@ -152,7 +152,7 @@
                 itemLink = listItem.querySelector('.item-link');
 
             itemLink.download = itemLink.textContent = item.name;
-            listItem.querySelector('.item-date').textContent = item.date;
+            listItem.querySelector('.item-date').textContent = new win.Date(item.date).toLocaleString();
             listItem.querySelector('.item-value').textContent = itemLink.href = item.value;
             listItem.querySelector('[data-action="copyValue"]').dataset.index = index;
             listItem.querySelector('[data-action="deleteItem"]').dataset.index = index;
@@ -190,7 +190,7 @@
                 listItems.push({
                     name: fileName,
                     size: fileSize,
-                    date: (new win.Date()).toLocaleString(),
+                    date: (new win.Date()).getTime(),
                     value: event.target.result,
                     imageFile: imageFile
                 });
