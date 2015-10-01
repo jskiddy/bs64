@@ -30,18 +30,25 @@
         },
 
         isCopySupported: function () {
-            var data;
+            var ua, data;
 
             if (!doc.queryCommandSupported) {
                 return false;
             }
 
-            data = nav.userAgent.toLowerCase().match(/(opr|chrome|firefox)\/(\d+)/);
+            ua = nav.userAgent.toLowerCase();
+            data = ua.match(/(opr)\/(\d+)/) ||
+                   ua.match(/(edge)\/(\d+)/) ||
+                   ua.match(/(chrome|firefox)\/(\d+)/);
+
             if (data) {
                 data[2] = win.Number(data[2]);
                 switch (data[1]) {
                     case 'opr':
                         return data[2] >= 29;
+
+                    case 'edge':
+                        return data[2] >= 12;
 
                     case 'chrome':
                         return data[2] >= 43;

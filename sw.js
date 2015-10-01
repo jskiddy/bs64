@@ -8,7 +8,7 @@ var FILES = [
         new Request('https://fonts.googleapis.com/css?family=Open+Sans&subset=latin,cyrillic', {mode: 'no-cors'})
     ],
     PREFIX = 'bs64',
-    VERSION = 'ver8',
+    VERSION = 'ver9',
     CACHENAME = PREFIX + VERSION,
     ALLOWED_HOSTS = [
         'fonts.gstatic.com'
