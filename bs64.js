@@ -140,6 +140,31 @@
         resultList = doc.getElementById('resultList'),
         listItemTemplate = doc.getElementById('listItemTemplate');
 
+    var loadFile = function (file) {
+        return new win.Promise(function (resolve, reject) {
+            var fr = new win.FileReader(),
+                fileName = file.name,
+                fileSize = file.size,
+                imageFile = (/image/i).test(file.type);
+
+            fr.onload = function () {
+                resolve({
+                    name: fileName,
+                    size: fileSize,
+                    date: (new win.Date()).getTime(),
+                    value: this.result,
+                    imageFile: imageFile
+                });
+            };
+
+            fr.onerror = function () {
+                reject(this.error);
+            };
+
+            fr.readAsDataURL(file);
+        });
+    };
+
     var renderItems = function () {
         var listFragment = doc.createDocumentFragment();
 
@@ -175,8 +200,7 @@
     };
 
     var uploadHandler = function (event) {
-        var count,
-            files = event.dataTransfer ?
+        var files = event.dataTransfer ?
                     event.dataTransfer.files : event.target.files;
 
         util.preventEvent(event);
@@ -185,30 +209,10 @@
             return;
         }
 
-        count = files.length;
-
-        [].forEach.call(files, function (file) {
-            var fr = new win.FileReader(),
-                fileName = file.name,
-                fileSize = file.size,
-                imageFile = (/image/i).test(file.type);
-
-            fr.onload = function (event) {
-                listItems.push({
-                    name: fileName,
-                    size: fileSize,
-                    date: (new win.Date()).getTime(),
-                    value: event.target.result,
-                    imageFile: imageFile
-                });
-
-                if (--count <= 0) {
-                    renderItems();
-                }
-            };
-
-            fr.readAsDataURL(file);
-         });
+        win.Promise.all([].map.call(files, loadFile)).then(function (items) {
+            listItems = listItems.concat(items);
+            renderItems();
+        });
     };
 
     doc.addEventListener('drop', uploadHandler, false);
