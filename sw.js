@@ -8,7 +8,7 @@ var FILES = [
         new Request('https://fonts.googleapis.com/css?family=Open+Sans&subset=latin,cyrillic', {mode: 'no-cors'})
     ],
     PREFIX = 'bs64',
-    VERSION = 'ver10',
+    VERSION = 'ver11',
     CACHENAME = PREFIX + VERSION,
     ALLOWED_HOSTS = [
         'fonts.gstatic.com'
@@ -74,7 +74,7 @@ this.addEventListener('fetch', function (event) {
                 return request || fetch(event.request).then(function (response) {
                     var url = new URL(event.request.url);
 
-                    if (ALLOWED_HOSTS.indexOf(url.host) >= 0) {
+                    if (event.request.method === 'GET' && ALLOWED_HOSTS.indexOf(url.host) >= 0) {
                         caches
                             .open(CACHENAME)
                             .then(function (cache) {
