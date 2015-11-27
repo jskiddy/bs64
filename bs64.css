@@ -75,7 +75,7 @@ body {
 
 .item,
 .item-name,
-.item-date,
+.item-info,
 .item-value,
 .item-image {
     margin: 16px;
@@ -96,7 +96,7 @@ body {
     color: #3f51b5;
 }
 
-.item-date {
+.item-info {
     color: #888;
     font-size: 14px;
     line-height: 100%;

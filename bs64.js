@@ -165,6 +165,18 @@
         });
     };
 
+    var loadImage = function (item) {
+        return new win.Promise(function (resolve, reject) {
+            var img = new win.Image();
+            img.onload = img.onerror = function () {
+                item.width = this.width;
+                item.height = this.height;
+                resolve(item);
+            };
+            img.src = item.value;
+        });
+    };
+
     var renderItems = function () {
         var listFragment = doc.createDocumentFragment();
 
@@ -180,11 +192,19 @@
         storage.setValue('items', listItems);
 
         listItems.forEach(function (item, index) {
-            var listItem = doc.importNode(listItemTemplate.content, true),
+            var info = [
+                    new win.Date(item.date).toLocaleString(),
+                    (item.size / 1000) + ' KB'
+                ],
+                listItem = doc.importNode(listItemTemplate.content, true),
                 itemLink = listItem.querySelector('.item-link');
 
+            if (item.imageFile) {
+                info.push(item.width + '×' + item.height + ' px');
+            }
+
             itemLink.download = itemLink.textContent = item.name;
-            listItem.querySelector('.item-date').textContent = new win.Date(item.date).toLocaleString();
+            listItem.querySelector('.item-info').textContent = info.join(' · '); // TODO
             listItem.querySelector('.item-value').textContent = itemLink.href = item.value;
             listItem.querySelector('[data-action="copyValue"]').dataset.index = index;
             listItem.querySelector('[data-action="deleteItem"]').dataset.index = index;
@@ -199,6 +219,12 @@
         resultList.scrollTop = 0;
     };
 
+    var processFile = function (file) {
+        return loadFile(file).then(function (item) {
+            return item.imageFile ? loadImage(item) : item;
+        });
+    };
+
     var uploadHandler = function (event) {
         var files = event.dataTransfer ?
                     event.dataTransfer.files : event.target.files;
@@ -209,7 +235,7 @@
             return;
         }
 
-        win.Promise.all([].map.call(files, loadFile)).then(function (items) {
+        win.Promise.all([].map.call(files, processFile)).then(function (items) {
             listItems = listItems.concat(items);
             renderItems();
         });
@@ -284,7 +310,7 @@
         value = value.trim().toLowerCase();
         [].forEach.call(doc.querySelectorAll('.item'), function (item) {
             item.hidden = item.querySelector('.item-name').textContent.toLowerCase().indexOf(value) < 0 &&
-                          item.querySelector('.item-date').textContent.toLowerCase().indexOf(value) < 0;
+                          item.querySelector('.item-info').textContent.toLowerCase().indexOf(value) < 0;
         });
     };
 
