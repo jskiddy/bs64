@@ -17,6 +17,17 @@
             event.stopPropagation();
         },
 
+        formatString: function (value) {
+            var args;
+            if (!value) {
+                return '';
+            }
+            args = win.Array.prototype.slice.call(arguments, 1);
+            return value.replace(/\{([0-9]+)\}/g, function (m, i) {
+                return args[i];
+            });
+        },
+
         copyNodeText: function (node) {
             var copied = false,
                 selection = this.selectNode(node);
@@ -86,8 +97,12 @@
 
     var Storage = function Storage(name) {
         this.name = name;
-        this.data = win.localStorage[name] ?
-                    win.JSON.parse(win.localStorage[name]) : {};
+
+        try {
+            this.data = win.JSON.parse(win.localStorage[name]);
+        } catch (error) {
+            this.data = {};
+        }
     };
 
     Storage.prototype.getValue = function (key) {
@@ -192,24 +207,28 @@
         storage.setValue('items', listItems);
 
         listItems.forEach(function (item, index) {
-            var info = [
-                    new win.Date(item.date).toLocaleString(),
-                    (item.size / 1000) + ' KB'
-                ],
-                listItem = doc.importNode(listItemTemplate.content, true),
-                itemLink = listItem.querySelector('.item-link');
-
-            if (item.imageFile) {
-                info.push(item.width + '×' + item.height + ' px');
-            }
+            var listItem = doc.importNode(listItemTemplate.content, true),
+                itemLink = listItem.querySelector('.item-link'),
+                itemSize = listItem.querySelector('.item-size'),
+                itemResolution = listItem.querySelector('.item-resolution');
 
             itemLink.download = itemLink.textContent = item.name;
-            listItem.querySelector('.item-info').textContent = info.join(' · '); // TODO
+            itemSize.textContent = util.formatString(
+                itemSize.textContent,
+                item.size / 1000
+            );
+            listItem.querySelector('.item-date').textContent = new win.Date(item.date).toLocaleString();
             listItem.querySelector('.item-value').textContent = itemLink.href = item.value;
             listItem.querySelector('[data-action="copyValue"]').dataset.index = index;
             listItem.querySelector('[data-action="deleteItem"]').dataset.index = index;
             if (item.imageFile) {
                 listItem.querySelector('.item-image').src = item.value;
+                itemResolution.hidden = false;
+                itemResolution.textContent = util.formatString(
+                    itemResolution.textContent,
+                    item.width,
+                    item.height
+                );
             }
             listFragment.appendChild(listItem);
         });

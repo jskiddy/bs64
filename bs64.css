@@ -102,6 +102,11 @@ body {
     line-height: 100%;
 }
 
+.item-info span:not(:first-child):before {
+    padding: 0 6px;
+    content: "\00b7";
+}
+
 .item-value {
     overflow: auto;
     word-wrap: break-word;

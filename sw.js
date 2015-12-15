@@ -7,8 +7,8 @@ var FILES = [
         '/bs64/manifest.json',
         new Request('https://fonts.googleapis.com/css?family=Open+Sans&subset=latin,cyrillic', {mode: 'no-cors'})
     ],
-    PREFIX = 'bs64',
-    VERSION = 'ver11',
+    PREFIX = 'bs64_',
+    VERSION = 1,
     CACHENAME = PREFIX + VERSION,
     ALLOWED_HOSTS = [
         'fonts.gstatic.com'
