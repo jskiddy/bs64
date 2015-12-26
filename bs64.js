@@ -48,8 +48,7 @@
             }
 
             ua = nav.userAgent.toLowerCase();
-            data = ua.match(/(opr)\/(\d+)/) ||
-                   ua.match(/(edge)\/(\d+)/) ||
+            data = ua.match(/(opr|edge)\/(\d+)/) ||
                    ua.match(/(chrome|firefox)\/(\d+)/);
 
             if (data) {
@@ -75,9 +74,10 @@
 
     // Toast
 
-    var Toast = function Toast(element) {
+    var Toast = function Toast(element, duration) {
         this.timer = 0;
         this.element = element || doc.createElement('div');
+        this.duration = duration || 2000;
     };
 
     Toast.prototype.hide = function () {
@@ -89,7 +89,7 @@
         win.clearTimeout(this.timer);
         this.element.textContent = message;
         this.element.classList.remove('hidden');
-        this.timer = win.setTimeout(this.hide.bind(this), 2000);
+        this.timer = win.setTimeout(this.hide.bind(this), this.duration);
         return this;
     };
 
@@ -147,7 +147,7 @@
 
     // Initialization
 
-    var toast = new Toast(doc.getElementById('toast')),
+    var toast = new Toast(doc.getElementById('toast'), 1200),
         filter = new TextInput(doc.getElementById('filter')),
         storage = new Storage('bs64'),
         listItems = storage.getValue('items') || [],
