@@ -145,6 +145,12 @@
         return this;
     };
 
+    // Application
+
+    var Application = function Application() {
+        // TODO
+    };
+
     // Initialization
 
     var toast = new Toast(doc.getElementById('toast'), 1200),
@@ -166,7 +172,7 @@
                 resolve({
                     name: fileName,
                     size: fileSize,
-                    date: (new win.Date()).getTime(),
+                    date: win.Date.now(),
                     value: this.result,
                     imageFile: imageFile
                 });
@@ -190,6 +196,11 @@
             };
             img.src = item.value;
         });
+    };
+
+    var getMessage = function (name) {
+        name = name.charAt(0).toUpperCase() + name.slice(1);
+        return doc.documentElement.dataset['message' + name] || '';
     };
 
     var renderItems = function () {
@@ -260,21 +271,21 @@
         });
     };
 
+    doc.documentElement.dataset.clipboard = util.isCopySupported();
+
     doc.addEventListener('drop', uploadHandler, false);
     doc.addEventListener('dragover', util.preventEvent, false);
     doc.addEventListener('dragenter', util.preventEvent, false);
 
-    doc.documentElement.classList.toggle('copying', util.isCopySupported());
-
     doc.addEventListener('click', function (event) {
         var target = event.target;
-        while (target && target !== this) {
+        while (target) {
             if (target.hasAttribute('data-action')) {
                 return this.dispatchEvent(new win.CustomEvent('action', {
                     detail: target
                 }));
             }
-            target = target.parentNode;
+            target = target.parentElement;
         }
     }, false);
 
@@ -288,12 +299,12 @@
 
             case 'copyValue':
                 if (util.copyNodeText(doc.querySelectorAll('.item-value')[target.dataset.index])) {
-                    toast.show(doc.documentElement.dataset.messageCopied);
+                    toast.show(getMessage('copied'));
                 }
                 break;
 
             case 'clearList':
-                if (win.confirm(target.dataset.confirm)) {
+                if (win.confirm(getMessage('confirm'))) {
                     listItems = [];
                     filter.setValue('');
                     renderItems();
@@ -351,7 +362,7 @@
                     reg.onupdatefound = function (event) {
                         this.installing.onstatechange = function (event) {
                             if (this.state === 'installed') {
-                                toast.show(doc.documentElement.dataset[active ? 'messageUpdated' : 'messageReady']);
+                                toast.show(getMessage(active ? 'updated' : 'ready'));
                             }
                         };
                     };

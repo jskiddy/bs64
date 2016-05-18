@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en" class="main empty" data-message-ready="App ready for offline use." data-message-copied="Value copied!" data-message-updated="App updated. Restart, please.">
+<html lang="en" class="main empty" data-message-ready="App ready for offline use." data-message-copied="Value copied!" data-message-confirm="Ready?" data-message-updated="App updated. Restart, please.">
     <head>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -26,7 +26,7 @@
         <template id="listItemTemplate">
             <li class="item">
                 <div class="item-name truncated"><a class="item-link selectable" title="Download"></a></div>
-                <div class="item-info"><span class="item-date selectable"></span><span class="item-size selectable">{0} KB</span><span class="item-resolution selectable" hidden>{0}&#215;{1} px</span></div>
+                <div class="item-info"><span class="item-date selectable"></span><span class="item-size selectable">{0} kB</span><span class="item-resolution selectable" hidden>{0}&#215;{1} px</span></div>
                 <div class="item-value selectable"></div>
                 <img class="item-image">
                 <div class="item-panel">
@@ -59,7 +59,7 @@
                 <svg class="icon"><use xlink:href="#icon-upload"></use></svg><span class="text">Upload files</span>
                 <input id="fileInput" type="file" hidden multiple="multiple">
             </li>
-            <li role="button" class="panel-item panel-item_button" title="Clear list" data-action="clearList" data-confirm="Ready?">
+            <li role="button" class="panel-item panel-item_button" title="Clear list" data-action="clearList">
                 <svg class="icon"><use xlink:href="#icon-remove"></use></svg><span class="text">Clear list</span>
             </li>
             <li class="panel-item panel-item_filter">
